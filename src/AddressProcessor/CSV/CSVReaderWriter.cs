@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace AddressProcessing.CSV
@@ -10,8 +12,9 @@ namespace AddressProcessing.CSV
 
     public class CSVReaderWriter
     {
-        private StreamReader _readerStream = null;
-        private StreamWriter _writerStream = null;
+        //null is a default value, therefore it is not needed
+        private StreamReader _readerStream;
+        private StreamWriter _writerStream;
 
         [Flags]
         public enum Mode { Read = 1, Write = 2 };
@@ -22,73 +25,105 @@ namespace AddressProcessing.CSV
             {
                 _readerStream = File.OpenText(fileName);
             }
-            else if (mode == Mode.Write)
+            else 
             {
-                FileInfo fileInfo = new FileInfo(fileName);
+                var fileInfo = new FileInfo(fileName);
                 _writerStream = fileInfo.CreateText();
             }
-            else
-            {
-                throw new Exception("Unknown file mode for " + fileName);
-            }
         }
+
 
         public void Write(params string[] columns)
         {
-            string outPut = "";
-
-            for (int i = 0; i < columns.Length; i++)
-            {
-                outPut += columns[i];
-                if ((columns.Length - 1) != i)
-                {
-                    outPut += "\t";
-                }
-            }
-
+            string outPut = string.Join("\t", columns);          
             WriteLine(outPut);
         }
 
-        public bool Read(string column1, string column2)
+
+        //public bool Read(params string[] inputColumns)
+        //{
+        //    char[] separator = { '\t' };
+
+        //    var line = ReadLine();
+
+        //    var columns = line?.Split(separator);
+
+        //    if (!(columns?.Length >= inputColumns.Length)) return false;
+        //    for (var i = 0; i < inputColumns.Length; i++)
+        //    {
+        //        inputColumns[i] = columns[i];
+        //    }
+        //    return true;
+        //}
+
+
+        //public bool Read(out string column1, out string column2)
+        //{
+        //    string a = column1;
+        //    Debug.Assert(column1 != null, message: "column1 != null");
+        //    string[] columns2 = new [] { column1, column2, "d", null};
+
+
+        //    List<string> list =new List<string>() {column1};
+        //    Read(column1, column2);
+        //    const int FIRST_COLUMN = 0;
+        //    const int SECOND_COLUMN = 1;
+
+        //    string line;
+        //    string[] columns;
+
+        //    char[] separator = { '\t' };
+
+        //    line = ReadLine();
+
+        //    if (line == null)
+        //    {
+        //        column1 = null;
+        //        column2 = null;
+
+        //        return false;
+        //    }
+
+        //    columns = line.Split(separator);
+
+        //    if (columns.Length == 0)
+        //    {
+        //        column1 = null;
+        //        column2 = null;
+
+        //        return false;
+        //    } 
+        //    else
+        //    {
+        //        column1 = columns[FIRST_COLUMN];
+        //        column2 = columns[SECOND_COLUMN];
+
+        //        return true;
+        //    }
+        //}
+
+
+      //  public bool Read(params string[] inputColumns)
+          public bool Read(string column1=null, string column2=null)
         {
-            const int FIRST_COLUMN = 0;
-            const int SECOND_COLUMN = 1;
-
-            string line;
-            string[] columns;
-
             char[] separator = { '\t' };
 
-            line = ReadLine();
-            columns = line.Split(separator);
+            var line = ReadLine();
+            var columns = line.Split(separator);
 
-            if (columns.Length == 0)
-            {
-                column1 = null;
-                column2 = null;
-
-                return false;
-            }
-            else
-            {
-                column1 = columns[FIRST_COLUMN];
-                column2 = columns[SECOND_COLUMN];
-
-                return true;
-            }
+            return columns.Length != 0;         
         }
+
 
         public bool Read(out string column1, out string column2)
         {
-            const int FIRST_COLUMN = 0;
-            const int SECOND_COLUMN = 1;
-
-            string line;
-            string[] columns;
+           // new CSVReaderWriter().Read("rrggj", "rrrr");
+            const int firstColumn = 0;
+            const int secondColumn = 1;
 
             char[] separator = { '\t' };
 
-            line = ReadLine();
+            var line = ReadLine();
 
             if (line == null)
             {
@@ -98,7 +133,7 @@ namespace AddressProcessing.CSV
                 return false;
             }
 
-            columns = line.Split(separator);
+            var columns = line.Split(separator);
 
             if (columns.Length == 0)
             {
@@ -106,14 +141,12 @@ namespace AddressProcessing.CSV
                 column2 = null;
 
                 return false;
-            } 
-            else
-            {
-                column1 = columns[FIRST_COLUMN];
-                column2 = columns[SECOND_COLUMN];
-
-                return true;
             }
+
+            column1 = columns[firstColumn];
+            column2 = columns[secondColumn];
+
+            return true;
         }
 
         private void WriteLine(string line)
@@ -128,15 +161,8 @@ namespace AddressProcessing.CSV
 
         public void Close()
         {
-            if (_writerStream != null)
-            {
-                _writerStream.Close();
-            }
-
-            if (_readerStream != null)
-            {
-                _readerStream.Close();
-            }
+            _writerStream?.Close();          
+            _readerStream?.Close();
         }
 
 
