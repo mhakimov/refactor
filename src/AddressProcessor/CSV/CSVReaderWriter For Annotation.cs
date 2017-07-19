@@ -8,30 +8,30 @@ namespace AddressProcessing.CSV
 
         Please leave the rest of this file as it is so we can discuss your concerns during the next stage of the interview process.
         
-        *) Regarding Write() method: I wouldn't include if statement in the loop, as it can affect performance if Columns[]
-        is a long array. It would be better to decrease amount of iterations by 1, remove the If-statement, and after 
-        we exit the loop simply add the last Column without tabulation at the end.
-        However, this loop is of a variable length, therefore using StringBuilder is advised. Even if columns
+        *) Regarding Write() method: The most readable way would be to use String.Join.
+        Alternatively we could use StringBuilder as our loop can have any length.  Even if columns
         will contain 3 strings max most of the time, it is a good practice to plan for edge cases (e.g. 1000 strings).
-        Alternatively use String.Join to make code more readable.
+        If we have to use a string concatenation I wouldn't include If statement in the loop, as it can affect
+        performance if Columns[] is a long array. It would be better to decrease amount of iterations by 1,
+        remove the If-statement, and after we exit the loop simply add the last Column without tabulation at the end.
 
         *) Regarding Read() methods: It is unclear why to have two Read() methods?
         The first Read method has incorrect implementation. Omitting out keywords in the parameters means column1 and
         column2 cannot be overwritten by this method. Therefore there is no point of taking column1 and column2 as input parameters 
         or giving these parameters any values within the method.
-        Also there is no need for else statement in the end of the method. 'Return true' can be taken out of it.
+        Also there is a risk of NullReferenceException as we do not check if 'line' is not null. After we add this 
+        verification, there will be no need to check if columns.length == 0.
+        Finally, there is no need for else statement in the end of the method. 'Return true' can be taken out of it.
 
         *) To make method Read() more flexible it would make sense to change its parameters from two strings to an array
-        of strings. This way we can use Read() even for any amount of columns (not just two)
+        of strings. This way we can use Read() for any amount of columns (not just two)
 
         *) Current implementation of method Read() lacks verification that columns.length is not equal 1.
         Assume that columns contains just one string. Then the line "column2 = columns[1];" will throw an
         IndexOutOfRangeException.
 
-        *) Regarding Open() method: will it ever get to else condition???
-        *)  It would be better to rename CSVReaderWriterForAnnotation to CsvReaderWriterForAnnotation
-        *) null in _readerStream is redundant as it is default
-        *)two private methods?
+        *) Some objects are not named in the correct format, and some code is redundant.
+        
 
     */
 
@@ -126,7 +126,7 @@ namespace AddressProcessing.CSV
             }
 
             columns = line.Split(separator);
-
+            //no need
             if (columns.Length == 0)
             {
                 column1 = null;
