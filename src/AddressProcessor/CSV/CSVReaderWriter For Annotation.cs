@@ -30,7 +30,7 @@ namespace AddressProcessing.CSV
         Assume that columns contains just one string. Then the line "column2 = columns[1];" will throw an
         IndexOutOfRangeException.
 
-        *) Some objects are not named in the correct format, and some code is redundant.
+        *) Some objects are named in incorrect format, and some code is redundant.
         
 
     */

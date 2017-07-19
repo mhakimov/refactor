@@ -51,7 +51,6 @@ namespace AddressProcessing.CSV
 
             var columns = line.Split('\t');
 
-            //nuzno li pod etim ifom zapisivatj inputColumns =null??
             if (columns.Length < inputColumns.Length) return false;
 
             for (var i = 0; i < inputColumns.Length; i++)
